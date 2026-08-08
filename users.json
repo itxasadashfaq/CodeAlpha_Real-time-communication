@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1784971119029",
+    "username": "TestUser_33",
+    "password": "$2a$10$oEPVPRBP.ujv/8.3t75m2uElvu4/UBw9AFMRoLSXwan4fPVdo/8CS",
+    "createdAt": "2026-07-25T09:18:39.029Z"
+  },
+  {
+    "id": "1784971592410",
+    "username": "asadashfaqru@gmail.com",
+    "password": "$2a$10$/8XHT4Hi085Yv6JwW6tTreBQzy/4njvMQqCt17ORN4LJBShFqtdg2",
+    "createdAt": "2026-07-25T09:26:32.414Z"
+  },
+  {
+    "id": "1784971750989",
+    "username": "testuser",
+    "password": "$2a$10$nNCwp.fWq4qEJASO92W3Ge/rvpX.BW7B538jy2wg7f41UAv0sFcRO",
+    "createdAt": "2026-07-25T09:29:10.989Z"
+  },
+  {
+    "id": "1784972754589",
+    "username": "tester",
+    "password": "$2a$10$m84OWzlTR35ueTJZEVUyb.9MRVFHug5lt7pHj1Qjir.YL1g8fU.lW",
+    "createdAt": "2026-07-25T09:45:54.594Z"
+  }
+]

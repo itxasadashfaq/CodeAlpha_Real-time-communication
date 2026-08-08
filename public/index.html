@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherCall - Real-time Communication & Collaboration</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons for aesthetics -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Background Animated Orbs -->
+  <div class="background-decorations">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div id="app-container">
+    
+    <!-- 1. AUTHENTICATION VIEW -->
+    <div id="auth-view" class="view active">
+      <div class="auth-card glass">
+        <div class="brand">
+          <i class="fa-solid fa-circle-nodes brand-logo"></i>
+          <h1>AetherCall</h1>
+          <p>Secure Video Conferencing & Collaboration</p>
+        </div>
+        
+        <div class="auth-tabs">
+          <button id="tab-login-btn" class="auth-tab active">Login</button>
+          <button id="tab-signup-btn" class="auth-tab">Sign Up</button>
+        </div>
+
+        <form id="login-form" class="auth-form active-form">
+          <div class="input-group">
+            <label for="login-username">Username</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-user"></i>
+              <input type="text" id="login-username" placeholder="Enter username" required autocomplete="username">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="login-password">Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="login-password" placeholder="Enter password" required autocomplete="current-password">
+            </div>
+          </div>
+          <button type="submit" class="btn primary-btn btn-glow">
+            <span>Login to Account</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <form id="signup-form" class="auth-form">
+          <div class="input-group">
+            <label for="signup-username">Username</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-user"></i>
+              <input type="text" id="signup-username" placeholder="Choose username" required autocomplete="username">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="signup-password">Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="signup-password" placeholder="Create strong password" required autocomplete="new-password">
+            </div>
+          </div>
+          <button type="submit" class="btn primary-btn btn-glow">
+            <span>Register Account</span>
+            <i class="fa-solid fa-user-plus"></i>
+          </button>
+        </form>
+        
+        <div id="auth-alert" class="alert error-alert hidden">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="auth-alert-msg">Error message goes here</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. DASHBOARD VIEW -->
+    <div id="dashboard-view" class="view">
+      <div class="dashboard-header">
+        <div class="brand-mini">
+          <i class="fa-solid fa-circle-nodes"></i>
+          <h2>AetherCall</h2>
+        </div>
+        <div class="user-profile">
+          <span class="user-greeting">Welcome, <strong id="display-username">User</strong></span>
+          <button id="logout-btn" class="btn icon-btn" title="Logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <!-- Dashboard Card: Join / Create Room -->
+        <div class="dashboard-card glass">
+          <h3>Create or Join a Meeting</h3>
+          <p class="section-desc">Create a new workspace or enter a code to join an existing session. Protect your session with client-side End-to-End Encryption (E2EE).</p>
+          
+          <div class="dash-tabs">
+            <button id="tab-join-room-btn" class="dash-tab active">Join Room</button>
+            <button id="tab-create-room-btn" class="dash-tab">Create Room</button>
+          </div>
+
+          <!-- Join Form -->
+          <div id="join-room-panel" class="dash-panel active-panel">
+            <form id="join-room-form">
+              <div class="input-group">
+                <label for="join-room-code">Room Code</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-hashtag"></i>
+                  <input type="text" id="join-room-code" placeholder="e.g. 5b9c-72e1" required>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="join-room-pass">Room E2EE Password</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-key"></i>
+                  <input type="password" id="join-room-pass" placeholder="Password for encryption key derivation" required>
+                </div>
+                <small class="input-hint">Required for encrypting call media/chat. Ensure all peers use the same password.</small>
+              </div>
+              <button type="submit" class="btn primary-btn btn-glow">
+                <span>Join Secure Room</span>
+                <i class="fa-solid fa-right-to-bracket"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Create Form -->
+          <div id="create-room-panel" class="dash-panel">
+            <form id="create-room-form">
+              <div class="input-group">
+                <label for="create-room-code">Generated Room Code</label>
+                <div class="input-wrapper read-only-wrapper">
+                  <i class="fa-solid fa-hashtag"></i>
+                  <input type="text" id="create-room-code" readonly>
+                  <button type="button" id="regenerate-code-btn" class="input-action-btn" title="Generate new code">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="create-room-pass">Room E2EE Password</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-key"></i>
+                  <input type="password" id="create-room-pass" placeholder="Create a secret room password" required>
+                </div>
+                <small class="input-hint">This password is used client-side for E2EE key derivation and is never sent to the server.</small>
+              </div>
+              <button type="submit" class="btn primary-btn btn-glow">
+                <span>Create & Join Session</span>
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </form>
+          </div>
+
+          <div id="dash-alert" class="alert error-alert hidden">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="dash-alert-msg">Error message goes here</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. MEETING ROOM VIEW -->
+    <div id="meeting-view" class="view">
+      
+      <!-- Top Navigation bar of Meeting -->
+      <header class="meeting-header glass">
+        <div class="meeting-info">
+          <i class="fa-solid fa-circle-nodes logo-active"></i>
+          <div>
+            <h3 id="room-title">Room: <span id="current-room-id">5b9c-72e1</span></h3>
+            <div class="e2ee-status text-gradient-green">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>E2EE Active (Client-Side Key)</span>
+            </div>
+          </div>
+          <button id="copy-room-code-btn" class="btn btn-sm btn-outline" title="Copy room code to clipboard">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy Code</span>
+          </button>
+          <button id="copy-invite-link-btn" class="btn btn-sm btn-outline" title="Copy secure invite link">
+            <i class="fa-solid fa-link"></i>
+            <span>Invite Link</span>
+          </button>
+        </div>
+
+        <div class="meeting-users-list">
+          <div class="active-users-count">
+            <i class="fa-solid fa-users"></i>
+            <span>Participants: <strong id="participant-count">1</strong></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Meeting Workspace Grid -->
+      <main class="meeting-workspace">
+        
+        <!-- Interactive Canvas / Whiteboard Overlay -->
+        <div id="whiteboard-container" class="whiteboard-wrapper glass hidden">
+          <div class="whiteboard-header">
+            <h4><i class="fa-solid fa-palette"></i> Collaborative Whiteboard</h4>
+            <div class="whiteboard-controls">
+              <!-- Tool Selector -->
+              <div class="control-group">
+                <label>Tool</label>
+                <div class="tool-palette">
+                  <button class="tool-swatch active" data-tool="brush" title="Paint Brush"><i class="fa-solid fa-paint-brush"></i></button>
+                  <button class="tool-swatch" data-tool="line" title="Draw Line"><i class="fa-solid fa-minus"></i></button>
+                  <button class="tool-swatch" data-tool="rect" title="Draw Rectangle"><i class="fa-regular fa-square"></i></button>
+                  <button class="tool-swatch" data-tool="circle" title="Draw Circle"><i class="fa-regular fa-circle"></i></button>
+                  <button class="tool-swatch" data-tool="text" title="Insert Text"><i class="fa-solid fa-font"></i></button>
+                </div>
+              </div>
+              
+              <!-- Color picker buttons -->
+              <div class="control-group">
+                <label>Color</label>
+                <div class="color-palette">
+                  <button class="color-swatch active" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                  <button class="color-swatch" style="background-color: #ff3366;" data-color="#ff3366"></button>
+                  <button class="color-swatch" style="background-color: #33ccff;" data-color="#33ccff"></button>
+                  <button class="color-swatch" style="background-color: #33ff66;" data-color="#33ff66"></button>
+                  <button class="color-swatch" style="background-color: #ffff33;" data-color="#ffff33"></button>
+                  <button class="color-swatch" style="background-color: #a020f0;" data-color="#a020f0"></button>
+                </div>
+              </div>
+
+              <!-- Size selector -->
+              <div class="control-group">
+                <label for="brush-size">Size</label>
+                <input type="range" id="brush-size" min="1" max="20" value="3">
+              </div>
+
+              <!-- Eraser -->
+              <button id="eraser-btn" class="btn btn-sm btn-outline" title="Use Eraser">
+                <i class="fa-solid fa-eraser"></i>
+              </button>
+
+              <!-- Clear Board -->
+              <button id="clear-board-btn" class="btn btn-sm btn-danger-outline" title="Clear Canvas for All">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Clear All</span>
+              </button>
+              
+              <!-- Close Whiteboard -->
+              <button id="close-whiteboard-btn" class="btn btn-sm btn-danger" title="Close Whiteboard View">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="canvas-wrapper">
+            <canvas id="whiteboard-canvas"></canvas>
+            <div id="canvas-cursors-container"></div>
+          </div>
+        </div>
+
+        <!-- Floating Settings Panel -->
+        <div id="media-settings-panel" class="media-settings-wrapper glass hidden">
+          <div class="settings-header">
+            <h5><i class="fa-solid fa-sliders"></i> Device Settings</h5>
+            <button id="close-settings-btn" class="settings-close-btn">&times;</button>
+          </div>
+          <div class="settings-body">
+            <div class="settings-group">
+              <label for="camera-select">Camera Source</label>
+              <select id="camera-select" class="settings-select">
+                <option value="">Loading cameras...</option>
+              </select>
+            </div>
+            <div class="settings-group">
+              <label for="mic-select">Microphone Source</label>
+              <select id="mic-select" class="settings-select">
+                <option value="">Loading microphones...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Stream Panels Grid -->
+        <div id="video-grid-container" class="video-grid">
+          <!-- Local Video Wrapper -->
+          <div class="video-wrapper local-video-wrapper" id="wrapper-local">
+            <video id="local-video" autoplay playsinline muted></video>
+            <div class="video-overlay">
+              <span class="user-label">You (Host)</span>
+              <div class="peer-status-indicators">
+                <i class="fa-solid fa-microphone-slash mic-muted-indicator hidden"></i>
+                <i class="fa-solid fa-video-slash video-muted-indicator hidden"></i>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Dynamic remote videos will be appended here -->
+        </div>
+
+        <!-- Floating Controls Panel -->
+        <nav class="floating-controls glass">
+          <!-- Mic Toggle -->
+          <button id="toggle-mic-btn" class="control-btn" title="Toggle Microphone">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
+          
+          <!-- Camera Toggle -->
+          <button id="toggle-video-btn" class="control-btn" title="Toggle Camera">
+            <i class="fa-solid fa-video"></i>
+          </button>
+
+          <!-- Screen Share Toggle -->
+          <button id="share-screen-btn" class="control-btn" title="Share Screen">
+            <i class="fa-solid fa-desktop"></i>
+          </button>
+
+          <!-- Whiteboard Toggle -->
+          <button id="toggle-whiteboard-btn" class="control-btn" title="Toggle Collaboration Whiteboard">
+            <i class="fa-solid fa-palette"></i>
+          </button>
+
+          <!-- Chat Sidebar Toggle -->
+          <button id="toggle-chat-btn" class="control-btn active" title="Toggle Chat Panel">
+            <i class="fa-solid fa-comments"></i>
+            <span class="chat-badge hidden"></span>
+          </button>
+
+          <!-- Settings Trigger -->
+          <button id="settings-toggle-btn" class="control-btn" title="Device Settings">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <!-- Leave Call -->
+          <button id="leave-call-btn" class="control-btn leave-btn" title="Disconnect & Exit Room">
+            <i class="fa-solid fa-phone-slash"></i>
+          </button>
+        </nav>
+
+        <!-- Right Side Panel: E2EE Chats & Files -->
+        <aside id="sidebar-panel" class="sidebar-collapsible active-panel glass">
+          <div class="sidebar-header">
+            <h4><i class="fa-solid fa-shield-halved text-green"></i> Chat & File Sharing</h4>
+            <div class="security-indicator">E2EE Encrypted</div>
+          </div>
+
+          <div class="sidebar-tabs">
+            <button id="sidebar-tab-chat" class="sidebar-tab active">Chat</button>
+            <button id="sidebar-tab-files" class="sidebar-tab">Files</button>
+          </div>
+
+          <!-- Chat Container Panel -->
+          <div id="sidebar-chat-panel" class="sidebar-tab-content active-content">
+            <div id="chat-messages" class="messages-container">
+              <div class="system-message">
+                <i class="fa-solid fa-lock"></i> All text and file communication is encrypted end-to-end client-side. The server cannot inspect or save your content.
+              </div>
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="typing-indicator-box hidden">
+              <div class="typing-animation">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+              </div>
+              <span id="typing-text">Alice is typing...</span>
+            </div>
+
+            <!-- Emoji drawer -->
+            <div id="emoji-drawer" class="emoji-drawer-box hidden">
+              <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+              <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+              <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
+              <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+              <button type="button" class="emoji-btn" data-emoji="💻">💻</button>
+              <button type="button" class="emoji-btn" data-emoji="🚀">🚀</button>
+              <button type="button" class="emoji-btn" data-emoji="😮">😮</button>
+              <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+            </div>
+            
+            <form id="chat-form" class="chat-input-wrapper">
+              <button type="button" id="emoji-toggle-btn" class="emoji-toggle-btn" title="Toggle Emojis">
+                <i class="fa-regular fa-face-smile"></i>
+              </button>
+              <input type="text" id="chat-input" placeholder="Type an encrypted message..." autocomplete="off">
+              <button type="submit" class="chat-send-btn" title="Send Message">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Files Transfer Container Panel -->
+          <div id="sidebar-files-panel" class="sidebar-tab-content">
+            <div class="file-uploader-box">
+              <i class="fa-solid fa-cloud-arrow-up cloud-icon"></i>
+              <p>Drag files here or click to browse</p>
+              <input type="file" id="file-selector" class="file-input">
+            </div>
+            
+            <div class="transfers-section">
+              <h5>Active & Completed Transfers</h5>
+              <div id="transfers-list" class="transfers-container">
+                <!-- File items dynamically added here -->
+                <div class="empty-state">No file transfers yet. Click above to send a file to the room.</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- Load WebRTC libraries, Socket.io, crypto helpers and App scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="crypto-helper.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
